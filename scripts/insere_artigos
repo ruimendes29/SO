@@ -1,0 +1,25 @@
+#!/bin/bash
+
+. scripts/helpers.sh
+
+QTD=1000
+
+[ -n "$1" ] && QTD=$1
+
+FILE=tests/lista_artigos_$QTD.txt
+TBL_RESULTS=tables/inserir_artigos_$QTD.md
+
+if [[ ! -f $FILE ]]; then
+  for i in $(seq 1 "$QTD"); do
+    echo "i Artigo_$i $i.25" >>"$FILE"
+  done
+fi
+
+if [ -x "$(command -v hyperfine)" ]; then
+  hyperfine -w 5 -r 20 -p "rm out/artigos out/strings out/stock" -u second --export-markdown "$TBL_RESULTS" "./bin/ma <$FILE"
+  echo_info "Resultados guardados em $TBL_RESULTS!"
+  echo ""
+else
+  time ./bin/ma <"$FILE"
+  echo_warning 'hyperfine is not installed, consider doing it for better time measurements results.' >&2
+fi

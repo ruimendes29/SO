@@ -1,0 +1,13 @@
+#!/bin/bash
+
+QTD=10000
+
+[ -n "$1" ] && QTD=$1
+
+FILE=tests/pedidos_cliente_$QTD.txt
+
+if [[ ! -f $FILE ]]; then
+  for i in $(seq 1 "$QTD"); do
+    echo "$(($RANDOM % $(($QTD / 20)) + 1)) $(($RANDOM % $QTD + 1))" >>"$FILE"
+  done
+fi

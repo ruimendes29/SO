@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PID=$(ps -a | grep sv | cut -d " " -f1)
+
+kill -SIGUSR1 "$PID"
